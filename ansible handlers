@@ -1,0 +1,26 @@
+---
+- name: Example Playbook with Handlers
+  hosts: servers
+  tasks:
+    - name: Install Apache web server
+      package:
+        name: apache2
+        state: present
+      notify: restart apache
+
+    - name: Copy configuration file
+      template:
+        src: /path/to/apache.conf.j2
+        dest: /etc/apache2/apache.conf
+      notify: restart apache
+
+    - name: Ensure Apache service is started
+      service:
+        name: apache2
+        state: started
+
+  handlers:
+    - name: restart apache
+      service:
+        name: apache2
+        state: restarted
